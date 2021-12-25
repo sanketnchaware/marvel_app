@@ -118,7 +118,7 @@
 
     async function getComics() {
         let res = await fetch(
-            "http://gateway.marvel.com/v1/public/comics?ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099"
+            "https://gateway.marvel.com/v1/public/comics?ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099"
         )
 
         let data = await res.json();
