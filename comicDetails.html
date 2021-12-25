@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Details</title>
+    <style>
+        * {
+            font-family: cursive;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: red;
+            text-shadow: 5px 15px 10px white;
+
+        }
+
+        #details {
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        img {
+            width: 35%;
+
+        }
+
+        body {
+            background: url("https://images5.alphacoders.com/949/thumb-1920-949998.jpg");
+            background-repeat: no-repeat;
+
+        }
+
+
+        nav h1 {
+            text-shadow: 0 0px 5px white;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            text-align: center
+        }
+
+        .title {
+            color: orange;
+            font-weight: bolder;
+            font-size: 2rem;
+            font-family: Arial, Helvetica, sans-serif;
+
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="./index.html">Home</a>
+        <nav>
+            <h1>Comic Details</h1>
+        </nav>
+    </header>
+
+    <section>
+        <div id="details">
+        </div>
+    </section>
+</body>
+
+
+</html>
+<script>
+    const detailsDiv = document.getElementById('details');
+    
+    var queryString = location.search.substring(1);
+    var id = queryString;
+    console.log(id);
+
+
+    async function getDetails() {
+        let res = await fetch(
+            `https://gateway.marvel.com/v1/public/comics?id=${id}&ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099`
+        );
+        let data = await res.json();
+        console.log(data.data.results);
+        AppendDetails(data.data.results);
+    }
+    getDetails();
+
+
+    const AppendDetails = (d) => {
+        image = document.createElement('img');
+        image.src = d[0].thumbnail.path + "." + d[0].thumbnail.extension;
+
+        title = document.createElement('p');
+        title.setAttribute('class', 'title');
+        title.innerText = d[0].title;
+
+        des = document.createElement('p');
+        des.innerText = d[0].description;
+        detailsDiv.append(image, title, des);
+
+
+    }
+</script>

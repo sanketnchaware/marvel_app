@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Application</title>
+    <style>
+        * {
+            font-family: cursive;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* border: 1px solid red; */
+        }
+
+        nav {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0.5rem;
+            border: 2px solid rgba(255, 255, 0, 0.329);
+            box-shadow: 0 0 20px burlywood;
+            background-color: rgba(255, 255, 255, 0.431)
+        }
+
+        input {
+            width: 100%;
+            border-radius: 4px;
+            text-align: center;
+            background-color: rgba(0, 128, 0, 0.315);
+            color: yellow;
+            border: none;
+            outline: none;
+            font-size: 1.5rem;
+            box-shadow: 0 0 3px black;
+        }
+
+        input::placeholder {
+            color: black;
+
+        }
+
+        .search_box {
+            width: 50%;
+            position: relative;
+            text-align: center;
+        }
+
+        #charactersDiv {
+            position: absolute;
+            bottom: -5rem;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px burlywood;
+            background-color: rgba(0, 128, 0, 0.315);
+            border-radius: 4px;
+        }
+
+        #charactersDiv p {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 3rem;
+            letter-spacing: 5px;
+        }
+
+        nav div h1 {
+            text-shadow: 0 0 10px green;
+        }
+
+        body {
+            background: url("https://images.unsplash.com/photo-1562613531-a131faf45335?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #comics a {
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: black;
+            font-weight: bold;
+            text-shadow: 0 0 10px green;
+        }
+
+        .marworld-img {
+            width: 50%;
+            display: flex;
+            margin-left: 50%;
+            margin-top: 28%;
+            border-radius:90%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .marworld-img h1 {
+            color: rgba(255, 255, 255, 0.705);
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px green;
+        }
+    </style>
+</head>
+
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <h1>MARVEL</h1>
+            </div>
+            <div class="search_box">
+                <input id="query" type="text" placeholder="Search for Character" oninput="debounce(main,500)">
+                <div id="charactersDiv">
+                </div>
+            </div>
+            <div id="comics">
+                <a href="./comics.html">Comics</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <section>
+        <div class="marworld-img">
+            <img src="./marworld.png" alt="">
+        </div>
+    </section>
+
+
+</body>
+
+</html>
+
+<script>
+    var charactersDiv = document.getElementById('charactersDiv');
+    var timerId;
+
+    function main() {
+        let name = document.getElementById('query').value;
+        console.log(name);
+        getCharacters(name);
+    }
+
+    async function getCharacters(name) {
+
+        if (name.length < 3) {
+            charactersDiv.innerHTML = null;
+            return false;
+        }
+
+        let res = await fetch(
+            `https://gateway.marvel.com:443/v1/public/characters?name=${name}&ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099`
+        );
+
+        let data = await res.json();
+        if (data.data.results.length === 0) {
+            charactersDiv.innerHTML = null;
+            return false;
+        }
+
+        AppendChar(data.data)
+    }
+
+
+    function AppendChar({
+        results
+    }) {
+        charactersDiv.innerHTML = null;
+
+        results.forEach((item) => {
+
+            var p = document.createElement("p");
+            p.innerText = item.name;
+            p.onclick = function () {
+                window.location.href = `./charDetails.html?${item.id}`;
+            }
+            charactersDiv.append(p);
+
+        })
+
+    }
+
+    function debounce(func, delay) {
+        let name = document.getElementById('query').value;
+        if (name.length < 3) {
+            charactersDiv.innerHTML = null;
+            return false;
+        }
+        if (timerId) {
+            clearTimeout(timerId);
+        }
+
+        timerId = setTimeout(() => {
+            func()
+        }, delay)
+    }
+
+
+    // async function AllCharacters() {
+    //     let res = await fetch(
+    //         `https://gateway.marvel.com:443/v1/public/characters?ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099`
+    //     );
+
+    //     let allChars = await res.json();
+    //     console.log(allChars)
+    // }
+    // AllCharacters()
+</script>

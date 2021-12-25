@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comics</title>
+    <style>
+        * {
+            font-family: cursive;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.2 rem;
+        }
+
+        nav {
+            background-color: rgba(255, 255, 255, 0.431);
+        }
+
+        nav h1 {
+            text-align: center;
+            padding: 1rem;
+            font-size: 2rem;
+        }
+
+
+        body {
+            background: url("https://images.unsplash.com/photo-1587270613291-b5c7042fc104?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
+
+            background-size: contain;
+
+        }
+
+        #comics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            justify-content: space-around;
+            align-items: center;
+            
+            background-color: rgba(222, 184, 135, 0.52)
+        }
+
+        .itemDiv {
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+
+        }
+
+        .itemDiv:hover {
+            background-color: rgba(48, 48, 45, 0.329);
+            box-shadow: 0 0 20px burlywood;
+
+        }
+
+
+        .itemDiv img {
+            width: 80%;
+        }
+
+        nav a {
+            text-align: center;
+            padding: 1rem;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="./index.html">Go back</a>
+            <h1> Marvel Comics</h1>
+        </nav>
+    </header>
+
+    <section>
+        <div id="comics"></div>
+
+    </section>
+
+
+
+</body>
+
+</html>
+
+<script>
+    let comicsDiv = document.getElementById('comics');
+
+    function AppendComics(c) {
+        console.log("Comics:", c)
+
+        c.forEach((item) => {
+            let itemDiv = document.createElement('div');
+            itemDiv.setAttribute('class', 'itemDiv');
+            itemDiv.onclick = function () {
+                window.location.href = `./comicDetails.html?${item.id}`;
+            }
+            let p = document.createElement('p');
+            p.innerText = item.title;
+            let image = document.createElement('img');
+            image.src = item.thumbnail.path + "." + item.thumbnail.extension;
+            itemDiv.append(image, p);
+            comicsDiv.append(itemDiv);
+        })
+
+
+
+
+    }
+
+    async function getComics() {
+        let res = await fetch(
+            "http://gateway.marvel.com/v1/public/comics?ts=1&apikey=e7f692ee29621aa62451c1c97c23d665&hash=6e558004c13a6665a954875a44918099"
+        )
+
+        let data = await res.json();
+        AppendComics(data.data.results);
+    }
+    getComics()
+</script>
